@@ -11,12 +11,14 @@ require 'socket'
 
 def open_file_search()
 	threads = []
-	print("[<3] Input File : ")
+	print("[+] Input File : ")
 	name_file = gets.chomp
+	print("[+] Delay/ Second : ")
+	delay = gets.chomp
 	File.foreach(name_file).each do |keyword|
 		threads << Thread.new(keyword) {|local|
 			keyword_strip = keyword.rstrip()
-			search_crt(keyword_strip)
+			search_crt(keyword_strip, delay)
 		}
 
 		#puts("[!] request TimeOUT ")
@@ -25,9 +27,10 @@ def open_file_search()
 	threads.each {|keyword| keyword.join}
 end
 
-def search_crt(keyword)
+def search_crt(keyword,delay)
 	url = "https://crt.sh/?q="+keyword
 	begin
+		sleep delay.to_i
 		request = Faraday.get(url)
 		if request.status == 200
 			grabber(request.body, keyword)
