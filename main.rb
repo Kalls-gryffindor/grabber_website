@@ -112,12 +112,16 @@ def search()
 	get_list = gets.chomp
 	File.foreach(get_list).each do |sparkle|
 		url = "https://crt.sh/?q=#{sparkle}"
-		request = Faraday.get(url)
-		if request.status == 200
-			grab_website2_test(request, sparkle)
-		else
-			puts('[!] Timeout')
-			puts(request.status)
+		begin
+			request = Faraday.get(url)
+			if request.status == 200
+				grab_website2_test(request, sparkle)
+			else
+				puts('[!] Timeout')
+				puts(request.status)
+			end
+		rescue => error
+			puts("[!] Timeout #{sparkle}")
 		end
 	end
 	
